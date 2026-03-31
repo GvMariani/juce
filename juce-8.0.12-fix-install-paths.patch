@@ -1,0 +1,48 @@
+diff -rupN JUCE-8.0.12.old/CMakeLists.txt JUCE-8.0.12/CMakeLists.txt
+--- JUCE-8.0.12.old/CMakeLists.txt	2025-12-16 09:51:21.000000000 +0100
++++ JUCE-8.0.12/CMakeLists.txt	2026-03-30 22:20:56.889829448 +0200
+@@ -137,10 +137,10 @@ write_basic_package_version_file("${JUCE
+     VERSION ${JUCE_VERSION}
+     COMPATIBILITY ExactVersion)
+ 
+-set(JUCE_INSTALL_DESTINATION "lib/cmake/JUCE-${JUCE_VERSION}" CACHE STRING
++set(JUCE_INSTALL_DESTINATION "lib64/cmake/JUCE-${JUCE_VERSION}" CACHE STRING
+     "The location, relative to the install prefix, where the JUCE config file will be installed")
+ 
+-set(JUCE_MODULE_PATH "include/JUCE-${JUCE_VERSION}/modules")
++set(JUCE_MODULE_PATH "share/juce/modules")
+ set(UTILS_INSTALL_DIR "${JUCE_INSTALL_DESTINATION}")
+ set(JUCEAIDE_PATH "${JUCE_TOOL_INSTALL_DIR}/${JUCE_JUCEAIDE_NAME}")
+ configure_package_config_file("${JUCE_CMAKE_UTILS_DIR}/JUCEConfig.cmake.in"
+@@ -148,7 +148,6 @@ configure_package_config_file("${JUCE_CM
+     PATH_VARS UTILS_INSTALL_DIR JUCEAIDE_PATH JUCE_MODULE_PATH
+     INSTALL_DESTINATION "${JUCE_INSTALL_DESTINATION}")
+ 
+-set(JUCE_MODULE_PATH "${JUCE_MODULES_DIR}")
+ set(UTILS_INSTALL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/extras/Build/CMake")
+ get_target_property(JUCEAIDE_PATH juceaide IMPORTED_LOCATION)
+ configure_package_config_file("${JUCE_CMAKE_UTILS_DIR}/JUCEConfig.cmake.in"
+diff -rupN JUCE-8.0.12.old/extras/Build/juceaide/CMakeLists.txt JUCE-8.0.12/extras/Build/juceaide/CMakeLists.txt
+--- JUCE-8.0.12.old/extras/Build/juceaide/CMakeLists.txt	2025-12-16 09:51:21.000000000 +0100
++++ JUCE-8.0.12/extras/Build/juceaide/CMakeLists.txt	2026-03-30 22:21:29.890630598 +0200
+@@ -168,7 +168,7 @@ else()
+ 
+     add_executable(juce::juceaide ALIAS juceaide)
+ 
+-    set(JUCE_TOOL_INSTALL_DIR "bin/JUCE-${JUCE_VERSION}" CACHE STRING
++    set(JUCE_TOOL_INSTALL_DIR "bin" CACHE STRING
+         "The location, relative to the install prefix, where juceaide will be installed")
+ 
+     install(PROGRAMS "${imported_location}" DESTINATION "${JUCE_TOOL_INSTALL_DIR}")
+diff -rupN JUCE-8.0.12.old/modules/CMakeLists.txt JUCE-8.0.12/modules/CMakeLists.txt
+--- JUCE-8.0.12.old/modules/CMakeLists.txt	2025-12-16 09:51:21.000000000 +0100
++++ JUCE-8.0.12/modules/CMakeLists.txt	2026-03-30 22:22:15.321546393 +0200
+@@ -31,7 +31,7 @@
+ # ==============================================================================
+ 
+ juce_add_modules(
+-    INSTALL_PATH "include/JUCE-${JUCE_VERSION}/modules"
++    INSTALL_PATH "share/juce/modules"
+     ALIAS_NAMESPACE juce
+     juce_analytics
+     juce_animation

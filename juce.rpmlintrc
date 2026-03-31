@@ -1,0 +1,4 @@
+# The main package is a framework, so is devel package:
+# kill a boatload of warnings
+addFilter("W: only-non-binary-in-usr-lib")
+addFilter("W: devel-file-in-non-devel-package")

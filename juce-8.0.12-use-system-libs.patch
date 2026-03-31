@@ -1,0 +1,200 @@
+diff -rupN JUCE-8.0.12.old/extras/AudioPerformanceTest/CMakeLists.txt JUCE-8.0.12/extras/AudioPerformanceTest/CMakeLists.txt
+--- JUCE-8.0.12.old/extras/AudioPerformanceTest/CMakeLists.txt	2025-12-16 09:51:21.000000000 +0100
++++ JUCE-8.0.12/extras/AudioPerformanceTest/CMakeLists.txt	2026-03-31 10:12:26.448190333 +0200
+@@ -41,6 +41,11 @@ target_compile_definitions(AudioPerforma
+     JUCE_USE_CURL=0 JUCE_WEB_BROWSER=0)
+ 
+ target_link_libraries(AudioPerformanceTest PRIVATE
++	"FLAC"
++    "ogg"
++    "vorbis"
++    "vorbisenc"
++    "vorbisfile"
+     juce::juce_audio_utils
+     juce::juce_recommended_config_flags
+     juce::juce_recommended_lto_flags
+diff -rupN JUCE-8.0.12.old/extras/AudioPluginHost/CMakeLists.txt JUCE-8.0.12/extras/AudioPluginHost/CMakeLists.txt
+--- JUCE-8.0.12.old/extras/AudioPluginHost/CMakeLists.txt	2025-12-16 09:51:21.000000000 +0100
++++ JUCE-8.0.12/extras/AudioPluginHost/CMakeLists.txt	2026-03-31 10:13:09.315349725 +0200
+@@ -81,6 +81,10 @@ target_compile_definitions(AudioPluginHo
+     JUCE_SILENCE_XCODE_15_LINKER_WARNING=1)
+ 
+ target_link_libraries(AudioPluginHost PRIVATE
++    "ogg"
++    "vorbis"
++    "vorbisenc"
++    "vorbisfile"
+     AudioPluginHostData
+     juce::juce_audio_utils
+     juce::juce_cryptography
+diff -rupN JUCE-8.0.12.old/extras/Build/CMake/JUCEModuleSupport.cmake JUCE-8.0.12/extras/Build/CMake/JUCEModuleSupport.cmake
+--- JUCE-8.0.12.old/extras/Build/CMake/JUCEModuleSupport.cmake	2025-12-16 09:51:21.000000000 +0100
++++ JUCE-8.0.12/extras/Build/CMake/JUCEModuleSupport.cmake	2026-03-31 10:15:37.193468595 +0200
+@@ -518,7 +518,7 @@ function(juce_add_module module_path)
+     if(${module_name} STREQUAL "juce_core")
+         _juce_add_standard_defs(${module_name})
+ 
+-        target_link_libraries(juce_core INTERFACE juce::juce_atomic_wrapper)
++        target_link_libraries(juce_core INTERFACE juce::juce_atomic_wrapper z)
+ 
+         if(CMAKE_SYSTEM_NAME MATCHES ".*BSD")
+             target_link_libraries(juce_core INTERFACE execinfo)
+diff -rupN JUCE-8.0.12.old/extras/Build/CMake/JUCEUtils.cmake JUCE-8.0.12/extras/Build/CMake/JUCEUtils.cmake
+--- JUCE-8.0.12.old/extras/Build/CMake/JUCEUtils.cmake	2025-12-16 09:51:21.000000000 +0100
++++ JUCE-8.0.12/extras/Build/CMake/JUCEUtils.cmake	2026-03-31 10:16:16.170471912 +0200
+@@ -110,6 +110,7 @@ if((CMAKE_SYSTEM_NAME STREQUAL "Linux")
+ 
+     # All browser related libs are loaded dynamically only if they are available during runtime
+     _juce_create_pkgconfig_target(JUCE_BROWSER_LINUX_DEPS NOLINK ${webkit_package_name} gtk+-x11-3.0)
++    _juce_create_pkgconfig_target(JUCE_IMG_LINUX_DEPS libpng libjpeg)
+ endif()
+ 
+ # We set up default/fallback copy dirs here. If you need different copy dirs, use
+diff -rupN JUCE-8.0.12.old/extras/Build/juceaide/CMakeLists.txt JUCE-8.0.12/extras/Build/juceaide/CMakeLists.txt
+--- JUCE-8.0.12.old/extras/Build/juceaide/CMakeLists.txt	2026-03-30 22:21:29.890630598 +0200
++++ JUCE-8.0.12/extras/Build/juceaide/CMakeLists.txt	2026-03-31 10:16:49.701199945 +0200
+@@ -50,6 +50,9 @@ if(JUCE_BUILD_HELPER_TOOLS)
+         JUCE_SILENCE_XCODE_15_LINKER_WARNING=1)
+ 
+     target_link_libraries(juceaide PRIVATE
++        "jpeg"
++        "png16"
++        "z"
+         juce::juce_build_tools
+         juce::juce_recommended_config_flags
+         juce::juce_recommended_lto_flags
+diff -rupN JUCE-8.0.12.old/extras/NetworkGraphicsDemo/CMakeLists.txt JUCE-8.0.12/extras/NetworkGraphicsDemo/CMakeLists.txt
+--- JUCE-8.0.12.old/extras/NetworkGraphicsDemo/CMakeLists.txt	2025-12-16 09:51:21.000000000 +0100
++++ JUCE-8.0.12/extras/NetworkGraphicsDemo/CMakeLists.txt	2026-03-31 10:18:20.799400922 +0200
+@@ -40,7 +40,14 @@ target_compile_definitions(NetworkGraphi
+     JUCE_USE_CURL=0 JUCE_WEB_BROWSER=0)
+ 
+ target_link_libraries(NetworkGraphicsDemo PRIVATE
+-    juce::juce_audio_utils
++	"FLAC"
++    "ogg"
++    "png"
++    "vorbis"
++    "vorbisenc"
++    "vorbisfile"
++    "z"
++	juce::juce_audio_utils
+     juce::juce_cryptography
+     juce::juce_opengl
+     juce::juce_osc
+diff -rupN JUCE-8.0.12.old/extras/Projucer/CMakeLists.txt JUCE-8.0.12/extras/Projucer/CMakeLists.txt
+--- JUCE-8.0.12.old/extras/Projucer/CMakeLists.txt	2025-12-16 09:51:21.000000000 +0100
++++ JUCE-8.0.12/extras/Projucer/CMakeLists.txt	2026-03-31 10:19:06.898377385 +0200
+@@ -153,6 +153,8 @@ juce_add_binary_data(ProjucerData SOURCE
+     ../Build/CMake/juce_LinuxSubprocessHelper.cpp)
+ 
+ target_link_libraries(Projucer PRIVATE
++    "png16"
++    "jpeg"
+     ProjucerData
+     juce::juce_build_tools
+     juce::juce_cryptography
+diff -rupN JUCE-8.0.12.old/extras/Projucer/Source/ProjectSaving/jucer_ProjectExporter.cpp JUCE-8.0.12/extras/Projucer/Source/ProjectSaving/jucer_ProjectExporter.cpp
+--- JUCE-8.0.12.old/extras/Projucer/Source/ProjectSaving/jucer_ProjectExporter.cpp	2025-12-16 09:51:21.000000000 +0100
++++ JUCE-8.0.12/extras/Projucer/Source/ProjectSaving/jucer_ProjectExporter.cpp	2026-03-31 10:22:16.166342501 +0200
+@@ -624,6 +624,39 @@ std::vector<PackageDependency> ProjectEx
+         dependencies.push_back (PackageDependency { "webkit2gtk-4.1", "webkit2gtk-4.0" });
+     }
+ 
++    // As we don't want vendored libraries, we need to link against system libraries
++    if (project.getEnabledModules().isModuleEnabled ("juce_core"))
++   {
++	packages.add ("zlib");
++	}
++	if (project.getEnabledModules().isModuleEnabled ("juce_graphics"))
++	{
++        packages.add ("libjpeg");
++        packages.add ("libpng");
++	}
++	if (project.getEnabledModules().isModuleEnabled ("juce_audio_formats"))
++	{
++		if(project.isConfigFlagEnabled ("JUCE_USE_FLAC", true))
++		{
++		    packages.add ("flac");
++		}
++
++		if(project.isConfigFlagEnabled ("JUCE_USE_OGGVORBIS", true))
++		{
++		    packages.add ("vorbis");
++			packages.add ("vorbisfile");
++			packages.add ("vorbisenc");
++			packages.add ("ogg");
++		 }
++	}
++	if (project.getEnabledModules().isModuleEnabled ("juce_audio_devices"))
++	{
++		if(project.isConfigFlagEnabled ("JUCE_JACK", true))
++		{
++			packages.add ("jack");
++		}
++	}
++    
+     packages.removeEmptyStrings();
+     packages.removeDuplicates (false);
+ 
+diff -rupN JUCE-8.0.12.old/extras/UnitTestRunner/CMakeLists.txt JUCE-8.0.12/extras/UnitTestRunner/CMakeLists.txt
+--- JUCE-8.0.12.old/extras/UnitTestRunner/CMakeLists.txt	2025-12-16 09:51:21.000000000 +0100
++++ JUCE-8.0.12/extras/UnitTestRunner/CMakeLists.txt	2026-03-31 10:23:26.968594983 +0200
+@@ -49,6 +49,13 @@ target_compile_definitions(UnitTestRunne
+     JUCE_SILENCE_XCODE_15_LINKER_WARNING=1)
+ 
+ target_link_libraries(UnitTestRunner PRIVATE
++    "FLAC"
++    "ogg"
++    "png16"
++    "vorbis"
++    "vorbisenc"
++    "vorbisfile"
++    "z"
+     juce::juce_analytics
+     juce::juce_audio_utils
+     juce::juce_build_tools
+diff -rupN JUCE-8.0.12.old/modules/juce_core/juce_core.h JUCE-8.0.12/modules/juce_core/juce_core.h
+--- JUCE-8.0.12.old/modules/juce_core/juce_core.h	2025-12-16 09:51:21.000000000 +0100
++++ JUCE-8.0.12/modules/juce_core/juce_core.h	2026-03-31 10:24:58.990819530 +0200
+@@ -76,6 +76,31 @@
+ 
+ #include "system/juce_TargetPlatform.h"
+ 
++#ifdef JUCE_INCLUDE_ZLIB_CODE
++# undef JUCE_INCLUDE_ZLIB_CODE
++#endif
++#define JUCE_INCLUDE_ZLIB_CODE 0
++
++#ifdef JUCE_INCLUDE_FLAC_CODE
++# undef JUCE_INCLUDE_FLAC_CODE
++#endif
++#define JUCE_INCLUDE_FLAC_CODE 0
++
++#ifdef JUCE_INCLUDE_OGGVORBIS_CODE
++# undef JUCE_INCLUDE_OGGVORBIS_CODE
++#endif
++#define JUCE_INCLUDE_OGGVORBIS_CODE 0
++
++#ifdef JUCE_INCLUDE_JPEGLIB_CODE
++# undef JUCE_INCLUDE_JPEGLIB_CODE
++#endif
++#define JUCE_INCLUDE_JPEGLIB_CODE 0
++
++#ifdef JUCE_INCLUDE_PNGLIB_CODE
++# undef JUCE_INCLUDE_PNGLIB_CODE
++#endif
++#define JUCE_INCLUDE_PNGLIB_CODE 0
++
+ //==============================================================================
+ /** Config: JUCE_FORCE_DEBUG
+ 
+@@ -135,7 +160,7 @@
+     specify the path where your zlib headers live.
+ */
+ #ifndef JUCE_INCLUDE_ZLIB_CODE
+- #define JUCE_INCLUDE_ZLIB_CODE 1
++ #define JUCE_INCLUDE_ZLIB_CODE 0
+ #endif
+ 
+ #ifndef JUCE_ZLIB_INCLUDE_PATH

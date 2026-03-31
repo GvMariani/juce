@@ -1,0 +1,15 @@
+diff -rupN JUCE-8.0.12.old/examples/CMakeLists.txt JUCE-8.0.12/examples/CMakeLists.txt
+--- JUCE-8.0.12.old/examples/CMakeLists.txt	2025-12-16 09:51:21.000000000 +0100
++++ JUCE-8.0.12/examples/CMakeLists.txt	2026-03-31 10:29:28.610573435 +0200
+@@ -70,6 +70,11 @@ function(_juce_add_pips)
+     foreach(header IN ITEMS ${headers})
+         juce_add_pip(${header} added_target)
+         target_link_libraries(${added_target} PUBLIC
++            "FLAC"
++			"ogg"
++			"vorbis"
++			"vorbisenc"
++			"vorbisfile"
+             juce::juce_recommended_config_flags
+             juce::juce_recommended_lto_flags
+             juce::juce_recommended_warning_flags)
