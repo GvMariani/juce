@@ -23,6 +23,7 @@ Patch4:	juce-8.0.12-fix-example-linking.patch
 BuildRequires:  cmake >= 3.22
 BuildRequires:  doxygen
 BuildRequires:  graphviz
+BuildRequires:  imagemagick
 BuildRequires:  make
 BuildRequires:  python
 BuildRequires:  ladspa-devel
