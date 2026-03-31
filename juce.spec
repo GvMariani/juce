@@ -217,7 +217,7 @@ install -vDm 644 examples/Assets/juce_icon.png %{buildroot}%{_iconsdir}/hicolor/
 for i in 16 32 48 72 96 128 256; do
 install -d -m 0755 %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/apps
 install -m 0644 %{SOURCE2} %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/apps/%{name}.png
-magick -resize ${i}x${i} %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/apps/%{name}.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/apps/%{name}.png
+convert -resize ${i}x${i} %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/apps/%{name}.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/apps/%{name}.png
 done
 
 %if %{with docs}
